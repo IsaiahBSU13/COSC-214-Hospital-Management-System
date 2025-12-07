@@ -1,0 +1,91 @@
+public class HMSProject {
+	public static void main (String[] args) {
+		HospitalTriage triage = new HospitalTriage();
+
+        triage.addPatient(new Patient("Alice", 1));   // Critical
+        triage.addPatient(new Patient("Bob", 2));     // Urgent
+        triage.addPatient(new Patient("Charlie", 3)); // Routine
+        triage.addPatient(new Patient("Diana", 1));   // Critical
+
+        triage.displayQueues();
+
+        System.out.println("Next patient: " + triage.getNextPatient());
+        triage.displayQueues();
+
+	}
+
+}
+
+//Patient class
+class Patient {
+ private String name;
+ private int priority; // 1 = Critical, 2 = Urgent, 3 = Routine
+
+ public Patient(String name, int priority) {
+     this.name = name;
+     this.priority = priority;
+ }
+
+ public String getName() {
+     return name;
+ }
+
+ public int getPriority() {
+     return priority;
+ }
+
+ @Override
+ public String toString() {
+     String priorityLabel;
+     switch (priority) {
+         case 1: priorityLabel = "CRITICAL"; break;
+         case 2: priorityLabel = "URGENT"; break;
+         case 3: priorityLabel = "ROUTINE"; break;
+         default: priorityLabel = "UNKNOWN"; break;
+     }
+     return name + " (" + priorityLabel + ")";
+ }
+ 
+}
+
+//Hospital management system
+class HospitalTriage {
+ private Queue<Patient> criticalQueue = new LinkedList<>();
+ private Queue<Patient> urgentQueue = new LinkedList<>();
+ private Queue<Patient> routineQueue = new LinkedList<>();
+
+ // Add patient to appropriate queue
+ public void addPatient(Patient patient) {
+     if (patient.getPriority() == 1) {
+         criticalQueue.add(patient);
+     } else if (patient.getPriority() == 2) {
+         urgentQueue.add(patient);
+     } else if (patient.getPriority() == 3) {
+         routineQueue.add(patient);
+     }
+ }
+
+
+//Get next patient to be treated
+public Patient getNextPatient() {
+    if (!criticalQueue.isEmpty()) {
+        return criticalQueue.poll();
+    } else if (!urgentQueue.isEmpty()) {
+        return urgentQueue.poll();
+    } else if (!routineQueue.isEmpty()) {
+        return routineQueue.poll();
+    } else {
+        return null;
+    }
+}
+
+
+
+//Display all queues
+public void displayQueues() {
+    System.out.println("Critical: " + criticalQueue);
+    System.out.println("Urgent: " + urgentQueue);
+    System.out.println("Routine: " + routineQueue);
+}
+
+}
